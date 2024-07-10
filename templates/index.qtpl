@@ -1,0 +1,32 @@
+{% import "github.com/painhardcore/Gobrou/models" %}
+
+{% code
+
+type IndexPage struct {
+	Cfg *models.Config
+	Posts []models.Post
+}
+
+%}
+
+{% func (p *IndexPage) Title() %}
+{%s p.Cfg.Title %}
+{% endfunc %}
+
+{% func (p *IndexPage) Style() %}
+{% endfunc %}
+
+{% func (p *IndexPage) Head() %}
+{% endfunc %}
+
+{% func (p *IndexPage) Body() %}
+    <h1>{%s p.Cfg.Title %}</h1>
+    <p>{%s= p.Cfg.Description %}</p>
+    <hr>
+    <h2>Recent Posts</h2>
+    <ul>
+        {% for _, post := range p.Posts %}
+        <li><a href="/posts/{%s post.Slug %}/">{%s post.Title %}</a></li>
+        {% endfor %}
+    </ul>
+{% endfunc %}

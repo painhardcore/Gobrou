@@ -1,0 +1,45 @@
+{% import "github.com/painhardcore/Gobrou/models" %}
+
+{% code
+
+type PostPage struct {
+	Post *models.Post
+}
+
+%}
+
+{% func (p *PostPage) Title() %}
+{%s p.Post.Title %}
+{% endfunc %}
+
+{% func (p *PostPage) Style() %}
+.post-meta {
+            color: #888;
+            font-size: 0.9em;
+}
+.back-link {
+            display: block;
+            margin-top: 20px;
+            color: #0000EE;
+            text-decoration: none;
+}
+.back-link:hover {
+            text-decoration: underline;
+}
+
+{%s= p.Post.CSS %}
+{% endfunc %}
+
+{% func (p *PostPage) Head() %}
+{% endfunc %}
+
+{% func (p *PostPage) Body() %}
+<a href="javascript:history.back()" class="back-link">Go Back</a>
+    <header>
+        <h1>{%s p.Post.Title %}</h1>
+        <p class="Post-meta">{%s p.Post.Date.Format("January 2, 2006 | at 3:04 PM") %}</p>
+    </header>
+    <main>
+        {%s= p.Post.Content %} 
+    </main>
+{% endfunc %}
