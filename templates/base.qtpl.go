@@ -57,7 +57,7 @@ func StreamPageTemplate(qw422016 *qt422016.Writer, p Page, cfg *models.Config) {
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>`)
 //line templates/base.qtpl:18
 	p.StreamTitle(qw422016)
