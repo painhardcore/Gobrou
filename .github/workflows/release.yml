@@ -22,7 +22,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v5
       with:
-        go-version: 'stable'  # or the latest Go version
+        go-version: 'stable'
 
     - name: Build the tool
       run: go build -o gobrou
@@ -32,6 +32,7 @@ jobs:
       with:
         name: gobrou
         path: gobrou
+
   release:
     runs-on: ubuntu-latest
     needs: build
@@ -44,35 +45,17 @@ jobs:
       with:
         name: gobrou
 
-    - name: Get the release ID if it exists
-      id: get_release_id
-      run: |
-        release_id=$(curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-          https://api.github.com/repos/${{ github.repository }}/releases/tags/${{ github.ref_name }} | jq -r .id)
-        echo "release_id=$release_id" >> $GITHUB_ENV
-
-    - name: Create or Update Release
-      id: create_or_update_release
-      run: |
-        if [ "${{ env.release_id }}" == "null" ]; then
-          release_response=$(curl -s -X POST -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"tag_name\": \"${{ github.ref_name }}\", \"name\": \"Release ${{ github.ref_name }}\", \"draft\": false, \"prerelease\": false}" \
-            https://api.github.com/repos/${{ github.repository }}/releases)
-          release_id=$(echo $release_response | jq -r .id)
-        else
-          release_response=$(curl -s -X PATCH -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" \
-            -d "{\"tag_name\": \"${{ github.ref_name }}\", \"name\": \"Release ${{ github.ref_name }}\", \"draft\": false, \"prerelease\": false}" \
-            https://api.github.com/repos/${{ github.repository }}/releases/${{ env.release_id }})
-          release_id=${{ env.release_id }}
-        fi
-        echo "release_id=$release_id" >> $GITHUB_ENV
-
-    - name: Upload Release Asset
-      uses: actions/upload-release-asset@v1
+    - name: Create or update release
+      uses: softprops/action-gh-release@v2
+      with:
+        tag_name: ${{ github.ref_name }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      with:
-        upload_url: https://uploads.github.com/repos/${{ github.repository }}/releases/${{ env.release_id }}/assets?name=gobrou
-        asset_path: ./gobrou
-        asset_name: gobrou
-        asset_content_type: application/octet-stream
+
+    - name: Upload asset with GH CLI (overwrite / replace)
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        # GITHUB_REF_NAME and GITHUB_REPOSITORY are provided by Actions
+        echo "Uploading gobrou to release ${GITHUB_REF_NAME} (repo: ${GITHUB_REPOSITORY})"
+        gh release upload "${GITHUB_REF_NAME}" gobrou --clobber --repo "${GITHUB_REPOSITORY}"
