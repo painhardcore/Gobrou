@@ -148,7 +148,7 @@ func (p *IndexPage) StreamBody(qw422016 *qt422016.Writer) {
 //line templates/index.qtpl:24
 	qw422016.N().S(`</p>
     <hr>
-    <h2>Recent Posts</h2>
+    <h2>All Posts</h2>
     <ul>
         `)
 //line templates/index.qtpl:28

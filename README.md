@@ -160,7 +160,6 @@ go generate
 - [x] Separate templates
 - [x] CSS per post
 - [x] Write a Readme for Gobrou
-- [ ] "All posts" page with pagination
 - [x] Deploy of the painhardcore.ru
 - [ ] About Page
 - [ ] Tags cloud
