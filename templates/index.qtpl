@@ -23,7 +23,7 @@ type IndexPage struct {
     <h1>{%s p.Cfg.Title %}</h1>
     <p>{%s= p.Cfg.Description %}</p>
     <hr>
-    <h2>Recent Posts</h2>
+    <h2>All Posts</h2>
     <ul>
         {% for _, post := range p.Posts %}
         <li><a href="/posts/{%s post.Slug %}/">{%s post.Title %}</a></li>
