@@ -118,6 +118,23 @@ func main() {
 		log.Fatalf("Failed to write index HTML file %s: %v", indexPath, err)
 	}
 
+	// Generate the 404 HTML file
+	var notFoundBuf bytes.Buffer
+	templates.WritePageTemplate(
+		&notFoundBuf,
+		&templates.NotFoundPage{
+			Posts: posts,
+			Cfg:   &config,
+		},
+		&config,
+	)
+
+	// Write the 404 HTML file to the dist directory
+	notFoundPath := filepath.Join("dist", "404.html")
+	if err := os.WriteFile(notFoundPath, notFoundBuf.Bytes(), 0o644); err != nil {
+		log.Fatalf("Failed to write 404 HTML file %s: %v", notFoundPath, err)
+	}
+
 	err = files.CopyDir("media", "dist/media")
 	if err != nil {
 		log.Fatal(err)
